@@ -23,6 +23,17 @@ router.get('/', (req, res) => {
     const { q } = req.query
     const srch = parseInt(q) || 0;
 
+ //  console.log(req.headers.cookie);
+const cookieValue = req.cookies || '';
+
+ console.log(cookieValue);
+
+// console.log();
+ 
+    res.cookie('visited', true, {
+        maxAge: 10000,
+    })
+
     if (srch !== 0 && !isNaN(srch)) {
         console.log(` Search ${srch}`);
         const srchFound = dataDB.filter(rate => (

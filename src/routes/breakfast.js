@@ -8,6 +8,7 @@ const dataDb = [{ item: 'cereal', quantity: 4 }, { item: 'toast', quantity: 6 },
 //get route
 router.get('/', (req, res, next) => {
     console.log('Before handling request');
+
     next();
 }, (req, res, next) => {
     res.status(200).send(dataDb);
