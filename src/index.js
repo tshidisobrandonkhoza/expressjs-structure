@@ -1,6 +1,10 @@
 const express = require('express');
+
 const app = express();
 const port = 1500;
+
+//database connection
+require('./database/index');
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
