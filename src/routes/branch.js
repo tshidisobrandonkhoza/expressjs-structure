@@ -18,18 +18,22 @@ dataDB = [{
     rating: 4
 }];
 
+router.use((req, res, next) => {
+    if (req.session.user) next();
+    else res.send(401);
+});
 
 router.get('/', (req, res) => {
     const { q } = req.query
     const srch = parseInt(q) || 0;
 
- //  console.log(req.headers.cookie);
-const cookieValue = req.cookies || '';
+    //  console.log(req.headers.cookie);
+    const cookieValue = req.cookies || '';
 
- console.log(cookieValue);
+    console.log(cookieValue);
 
-// console.log();
- 
+    // console.log();
+
     res.cookie('visited', true, {
         maxAge: 10000,
     })

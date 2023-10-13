@@ -9,6 +9,7 @@ const breakfastRouter = require('./routes/breakfast');
 const lunchRouter = require('./routes/lunch');
 const branchRouter = require('./routes/branch');
 const cartRouter = require('./routes/cart');
+const authRouter = require(('./routes/auth'))
 
 
 
@@ -30,5 +31,6 @@ app.use('/api/breakfast', breakfastRouter);
 app.use('/api/lunch', lunchRouter);
 app.use('/api/branch', branchRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/auth', authRouter);
 
 app.listen(port)
