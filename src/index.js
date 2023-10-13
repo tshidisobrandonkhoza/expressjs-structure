@@ -3,11 +3,12 @@ const app = express();
 const port = 1500;
 
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const breakfastRouter = require('./routes/breakfast');
 const lunchRouter = require('./routes/lunch');
 const branchRouter = require('./routes/branch');
-
+const cartRouter = require('./routes/cart');
 
 
 
@@ -19,8 +20,15 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 
+app.use(session({
+    secret: 'ABC',
+    resave: false,
+    saveUninitialized: false,
+}));
+
 app.use('/api/breakfast', breakfastRouter);
 app.use('/api/lunch', lunchRouter);
 app.use('/api/branch', branchRouter);
+app.use('/api/cart', cartRouter);
 
 app.listen(port)
