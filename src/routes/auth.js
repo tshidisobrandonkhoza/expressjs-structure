@@ -2,40 +2,52 @@ const { Router } = require('express');
 //import Users Schema
 const User = require('../database/Schema/User');
 
+//password hashing
+const { hashPassword, compPassword } = require('../utils/helpers');
+
+
 const router = Router();
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     //get inputs
-    const { username, password } = req.body;
-    if (username && password) {
-        if (req.session.user) {
-            res.send(req.session.user);
-            console.log('You are logged in');
-        } else {
-            req.session.user = {
-                username,
-            };
-            res.send(req.session.user);
+    const { email, password } = req.body;
+    if (!req.session.user) {
+        if (!email || !password) return res.send(400);
+        //query the database
+        const userDB = await User.findOne({ email });
+        if (!userDB) return res.send(401);
+        const isValid = compPassword(password, userDB.password);
+
+        if (!isValid) {
+            console.log('couldnt log you in');
+            return res.send(401);
         }
-    } else res.send(401);
+        else {
+            req.session.user = userDB;
+            console.log('you are logged in');
+            return res.send(200);
+        }
+    } else {
+        console.log('already logged in');
+        res.send(200);
+    }
+
 });
 
 
 router.post('/register', async (req, res) => {
-    const { username, password, email } = req.body;
-    //const userData = { username, password, email };
-    //console.log(userData);
-    // res.send(201);
+    const { email } = req.body;
+    // const { username, email } = req.body;
 
-
-    const userDB = await User.findOne({ $or: [{ username }, { email }] });
+    const userDB = await User.findOne({ email });
+    //const userDB = await User.findOne({ $or: [{ username }, { email }] });
     if (userDB) {
         res.status(400).send({ msg: 'User already exist' });
     } else {
-        const newUser = await User.create({ username, password, email });
+        const password = hashPassword(req.body.password)
+        const newUser = await User.create({ email, password });
         res.send(201);
     }
-
 });
 
 module.exports = router;
